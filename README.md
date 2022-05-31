@@ -32,6 +32,13 @@ file lists technical contributors to the project. The COPYING file explains
 MediaWiki's copyright and license (GNU General Public License, version 2 or
 later). Many thanks to the Wikimedia community for testing and suggestions.
 
+## Installation:
+
+1. After you download the files move them to htdocs in wammp/htdocs
+2. go to localhost/mediawiki
+3. Login with your username and email
+4. you're good to go
+
 ## Notes: 
 
 This isn't the latest version of media wiki but it has the most support and modification.

@@ -31,3 +31,14 @@ MediaWiki is the result of global collaboration and cooperation. The CREDITS
 file lists technical contributors to the project. The COPYING file explains
 MediaWiki's copyright and license (GNU General Public License, version 2 or
 later). Many thanks to the Wikimedia community for testing and suggestions.
+
+## Notes: 
+
+This isn't the latest version of media wiki but it has the most support and modification.
+i made somechanges in the Localsetting,php so that you are able to:
+* upload images and gifs
+* enabled visual edit to ease on edit of your wiki page(s)
+
+Known bugs:
+* Using a bootstrap would bug the reference button in user setting
+* adding chameleon skin with the bootstrap would broke the whole media wiki

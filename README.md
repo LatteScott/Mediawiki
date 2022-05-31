@@ -34,7 +34,10 @@ later). Many thanks to the Wikimedia community for testing and suggestions.
 
 ## Things you need:
 
-1. 
+1. XAMPP control panel
+2. NotePad
+3. CustomSkins
+4. Bootstrap
 
 ## Installation:
 
@@ -42,6 +45,11 @@ later). Many thanks to the Wikimedia community for testing and suggestions.
 2. go to localhost/mediawiki
 3. Login with your username and email
 4. you're good to go
+
+## CustomSkin installation
+1. Write these in the bottom most line inside the Localsetting.php
+- wfLoadExtension( 'Bootstrap' );
+- wfLoadSkin( '[Custom Skin]' );
 
 ## Notes: 
 
@@ -51,5 +59,8 @@ i made somechanges in the Localsetting,php so that you are able to:
 * enabled visual edit to ease on edit of your wiki page(s)
 
 Known bugs:
-* Using a bootstrap would bug the reference button in user setting
+* Using a bootstrap would bug the preference button in user setting
+
+![unknown (4)](https://user-images.githubusercontent.com/106130185/171141816-fd5fdfd9-1a95-4726-9b4d-52fbc9cdf1cc.png)
+
 * adding chameleon skin with the bootstrap would broke the whole media wiki

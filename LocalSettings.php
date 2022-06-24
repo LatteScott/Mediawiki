@@ -19,7 +19,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
-$wgSitename = "Encyclopedia";
+$wgSitename = "Wikimedia";
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
@@ -36,7 +36,7 @@ $wgResourceBasePath = $wgScriptPath;
 
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
-$wgLogos = [ '1x' => "$wgResourceBasePath/resources/assets/profile.png" ];
+$wgLogos = [ '1x' => "$wgResourceBasePath/resources/assets/wiki.png" ];
 
 ## UPO means: this is also a user preference option
 
@@ -51,17 +51,49 @@ $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
 ## Database settings
-$wgDBtype = "mysql";
-$wgDBserver = "localhost";
-$wgDBname = "my_wiki";
-$wgDBuser = "root";
+$wgDBtype = "sqlite";
+$wgDBserver = "";
+$wgDBname = "wikimepedia";
+$wgDBuser = "";
 $wgDBpassword = "";
 
-# MySQL specific settings
-$wgDBprefix = "";
-
-# MySQL table options to use during installation or update
-$wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
+# SQLite-specific settings
+$wgSQLiteDataDir = "C:\\xampp\\data";
+$wgObjectCaches[CACHE_DB] = [
+	'class' => SqlBagOStuff::class,
+	'loggroup' => 'SQLBagOStuff',
+	'server' => [
+		'type' => 'sqlite',
+		'dbname' => 'wikicache',
+		'tablePrefix' => '',
+		'variables' => [ 'synchronous' => 'NORMAL' ],
+		'dbDirectory' => $wgSQLiteDataDir,
+		'trxMode' => 'IMMEDIATE',
+		'flags' => 0
+	]
+];
+$wgLocalisationCacheConf['storeServer'] = [
+	'type' => 'sqlite',
+	'dbname' => "{$wgDBname}_l10n_cache",
+	'tablePrefix' => '',
+	'variables' => [ 'synchronous' => 'NORMAL' ],
+	'dbDirectory' => $wgSQLiteDataDir,
+	'trxMode' => 'IMMEDIATE',
+	'flags' => 0
+];
+$wgJobTypeConf['default'] = [
+	'class' => 'JobQueueDB',
+	'claimTTL' => 3600,
+	'server' => [
+		'type' => 'sqlite',
+		'dbname' => "{$wgDBname}_jobqueue",
+		'tablePrefix' => '',
+		'variables' => [ 'synchronous' => 'NORMAL' ],
+		'dbDirectory' => $wgSQLiteDataDir,
+		'trxMode' => 'IMMEDIATE',
+		'flags' => 0
+	]
+];
 
 # Shared database table
 # This has no effect unless $wgSharedDB is also set.
@@ -101,29 +133,29 @@ $wgShellLocale = "C.UTF-8";
 # Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = "en";
 
-$wgSecretKey = "4adb677880ba35b8ab5285d3c7b444a58722622dda0b8ea9a1a958fd2c46d626";
+$wgSecretKey = "1f3135c2aa3a4ccf72aeba74ab8d219d7b1347a1870e9578779c7c9d24045f59";
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
 
 # Site upgrade key. Must be set to a string (default provided) to turn on the
 # web installer while LocalSettings.php is in place
-$wgUpgradeKey = "db4600f92f7825a8";
+$wgUpgradeKey = "6f624f9be0e819f3";
 
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
 ## License and Creative Commons licenses are supported so far.
 $wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
-$wgRightsUrl = "";
-$wgRightsText = "";
-$wgRightsIcon = "";
+$wgRightsUrl = "https://www.gnu.org/copyleft/fdl.html";
+$wgRightsText = "GNU Free Documentation License 1.3 or later";
+$wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/gnu-fdl.png";
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "";
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'vector', 'monobook':
-$wgDefaultSkin='chameleon';
+$wgDefaultSkin = "timeless";
 
 # Enabled skins.
 # The following skins were automatically enabled:
@@ -132,45 +164,20 @@ wfLoadSkin( 'Timeless' );
 wfLoadSkin( 'Vector' );
 
 
+# Enabled extensions. Most of the extensions are enabled by adding
+# wfLoadExtension( 'ExtensionName' );
+# to LocalSettings.php. Check specific extension documentation for more details.
+# The following extensions were automatically enabled:
+wfLoadExtension( 'CodeEditor' );
+wfLoadExtension( 'PageImages' );
+wfLoadExtension( 'WikiEditor' );
+
+
 # End of automatically generated settings.
 # Add more configuration options below.
-$parsoidInstallDir = 'vendor/wikimedia/parsoid'; # bundled copy
-#$parsoidInstallDir = '/my/path/to/git/checkout/of/Parsoid';
 
-// For developers: ensure Parsoid is executed from $parsoidInstallDir,
-// (not the version included in mediawiki-core by default)
-// Must occur *before* wfLoadExtension()
-if ( $parsoidInstallDir !== 'vendor/wikimedia/parsoid' ) {
-    // AutoLoader::registerNamespaces was added in MW 1.39
-    AutoLoader::registerNamespaces( [
-        // Keep this in sync with the "autoload" clause in
-        // $parsoidInstallDir/composer.json
-        'Wikimedia\\Parsoid\\' => "$parsoidInstallDir/src",
-    ] );
-}
+wfLoadExtension( 'Elastica' );
+wfLoadExtension( 'CirrusSearch' );
 
-wfLoadExtension( 'Parsoid', "$parsoidInstallDir/extension.json" );
-
-# Manually configure Parsoid
-$wgVisualEditorParsoidAutoConfig = false;
-$wgParsoidSettings = [
-    'useSelser' => true,
-    'rtTestMode' => false,
-    'linting' => false,
-];
-$wgVirtualRestConfig['modules']['parsoid'] = [
-    // URL to the Parsoid instance.
-    // If Parsoid is not running locally, you should change $wgServer to match the non-local host 
-    // While using Docker in macOS, you may need to replace $wgServer with http://host.docker.internal:8080
-    'url' => $wgServer . $wgScriptPath . '/rest.php',
-    // Parsoid "domain", see below (optional, rarely needed)
-    // 'domain' => 'localhost',
-];
-unset( $parsoidInstallDir );
-
-$wgShowExceptionDetails = true;
-
-wfLoadExtension( 'VisualEditor' );
-
-
-
+$wgCirrusSearchServers = [ 'elasticsearch0', 'elasticsearch1', 'elasticsearch2', 'elasticsearch3' ];
+$wgSearchType = 'CirrusSearch';
